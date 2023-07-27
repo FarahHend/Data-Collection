@@ -6,6 +6,7 @@ import com.Hend.BackendSpringboot.repository.OptionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +44,11 @@ public class OptionService {
 
     public Option getOptionById(Integer optionId) {
         return optionRepository.findById(optionId).orElse(null);
+    }
+
+    public String getOptionTextById(Integer optionId) {
+        Optional<Option> optionOptional = optionRepository.findById(optionId);
+        return optionOptional.map(Option::getOptionText).orElse("N/A");
     }
 }
 

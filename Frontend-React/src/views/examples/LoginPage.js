@@ -16,8 +16,9 @@
 
 */
 
-import React, { useState } from "react";
+import React, { useState , useContext } from 'react';
 import classnames from "classnames";
+import { AuthContext } from '../../api/AuthContext';
 import {
   Button,
   Card,
@@ -50,9 +51,9 @@ export default function LoginPage() {
   const [squares7and8, setSquares7and8] = useState("");
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false); // Add this line
-
-
-
+  
+  const { handlelogin } = useContext(AuthContext);
+  const { setAuthToken } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -67,10 +68,14 @@ export default function LoginPage() {
     try {
       // Call the register function from the apiService
       const response = await login(loginData);
-      console.log("Login successful:", response);
+      console.log("Login successful. Access Token:", response.access_token); // Add this console log
+      //console.log("Login successful:", response);
       // Handle the successful registration (e.g., show a success message or redirect)
 
-      console.log("Login successful:", response);
+      handlelogin(response.access_token);
+      //setAuthToken(response.access_token);
+
+      //console.log("Login successful:", response);
 
       // Show a success alert
       window.alert("Login with success!");

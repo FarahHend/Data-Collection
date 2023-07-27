@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,6 +76,11 @@ public class SurveyService {
     public Survey getSurveyById(Integer surveyId) {
         // Use the survey repository to retrieve the survey by its ID
         return surveyRepository.findById(surveyId).orElse(null);
+    }
+
+    public String getSurveyTitleById(Integer surveyId) {
+        Optional<Survey> surveyOptional = surveyRepository.findById(surveyId);
+        return surveyOptional.map(Survey::getTitleSurvey).orElse("N/A");
     }
 }
 

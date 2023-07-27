@@ -40,6 +40,7 @@ import Download from "./IndexSections/Download";
 import { login, refreshToken, register } from 'api/Authentication.js';
 
 
+
 export default function Index() {
   React.useEffect(() => {
     document.body.classList.toggle("index-page");

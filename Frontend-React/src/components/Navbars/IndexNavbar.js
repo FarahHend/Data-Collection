@@ -15,8 +15,12 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from 'axios';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../api/AuthContext';
+import { getUserIdFromToken } from '../../api/AuthUtils'; 
+
 // reactstrap components
 import {
   Button,
@@ -74,26 +78,44 @@ export default function IndexNavbar() {
       .getElementById("download-section")
       .scrollIntoView({ behavior: "smooth" });
   };
+
+  const { authToken } = useContext(AuthContext); 
+
+  const handleFileUpload = async (e) => {
+    console.log("Auth Token in handleFileUpload:", authToken); // Add this line to check the value
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', getUserIdFromToken(authToken)); // Extract user ID from the access token
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/api/v1/file-controller/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${authToken}`, // Include the authToken in the request headers
+          },
+        }
+      );
+      console.log('File uploaded:', response.data);
+      // Handle the successful file upload (e.g., show a success message)
+    } catch (error) {
+      console.error('File upload failed:', error.message);
+      // Handle the file upload error (e.g., show an error message)
+    }
+  };
+
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">
       <Container>
         <div className="navbar-translate">
           <NavbarBrand to="/" tag={Link} id="navbar-brand">
-          Data
+            Data
             <span>Hub • </span>
           </NavbarBrand>
-          <UncontrolledTooltip placement="bottom" target="navbar-brand">
-          Where Data Finds Meaning!
-          </UncontrolledTooltip>
-          <button
-            aria-expanded={collapseOpen}
-            className="navbar-toggler navbar-toggler"
-            onClick={toggleCollapse}
-          >
-            <span className="navbar-toggler-bar bar1" />
-            <span className="navbar-toggler-bar bar2" />
-            <span className="navbar-toggler-bar bar3" />
-          </button>
+          {/* ... (existing code) */}
         </div>
         <Collapse
           className={"justify-content-end " + collapseOut}
@@ -103,81 +125,28 @@ export default function IndexNavbar() {
           onExited={onCollapseExited}
         >
           <div className="navbar-collapse-header">
-            <Row>
-              <Col className="collapse-brand" xs="6">
-                <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  BLK•React
-                </a>
-              </Col>
-              <Col className="collapse-close text-right" xs="6">
-                <button
-                  aria-expanded={collapseOpen}
-                  className="navbar-toggler"
-                  onClick={toggleCollapse}
-                >
-                  <i className="tim-icons icon-simple-remove" />
-                </button>
-              </Col>
-            </Row>
+            {/* ... (existing code) */}
           </div>
           <Nav navbar>
-           
-            <UncontrolledDropdown nav>
-              <DropdownToggle
-                caret
-                color="default"
-                data-toggle="dropdown"
-                href="#pablo"
-                nav
-                onClick={(e) => e.preventDefault()}
-              >
-                <i className="fa fa-cogs d-lg-none d-xl-none" />
-                Getting started
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-with-icons">
-                <DropdownItem href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">
-                  <i className="tim-icons icon-paper" />
-                  Documentation
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/register-page">
-                  <i className="tim-icons icon-bullet-list-67" />
-                  Register Page
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/landing-page">
-                  <i className="tim-icons icon-image-02" />
-                  Landing Page
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/profile-page">
-                  <i className="tim-icons icon-single-02" />
-                  Profile Page
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            {/* ... (existing code) */}
             <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="primary"
-                target="_blank"
-                href="https://www.creative-tim.com/product/blk-design-system-pro-react?ref=bdsr-user-archive-index-navbar-upgrade-pro"
-              >
-                <i className="tim-icons icon-spaceship" /> Upgrade to PRO
-              </Button>
-            </NavItem>
-            <NavItem>
+              <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={handleFileUpload}
+              />
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={scrollToDownload}
+                onClick={() => document.getElementById("fileInput").click()}
               >
-                <i className="tim-icons icon-cloud-download-93" /> Download
+                <i className="tim-icons icon-cloud-upload-94" /> Upload
               </Button>
             </NavItem>
             <NavItem>
-                    <NavLink tag={Link} to="/profile-page">
-                      <i className="tim-icons icon-single-02" />
-                      Profile
-                    </NavLink>
-                  </NavItem>
+              {/* ... (existing code) */}
+            </NavItem>
           </Nav>
         </Collapse>
       </Container>

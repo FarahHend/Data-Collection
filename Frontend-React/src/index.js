@@ -31,12 +31,14 @@ import LoginPage from "views/examples/LoginPage.js";
 import Polls from "views/examples/Polls.js";
 import HomePage from "views/examples/HomePage.js";
 import { login, refreshToken, register } from 'api/Authentication.js';
-//import LoginPage from "views/examples/LoginPage";
+import { AuthProvider } from './api/AuthContext';
+import UploadPage from 'components/Navbars/IndexNavbar.js';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
+  <AuthProvider>
     <Routes>
     <Route path="/Polls-page" element={<Polls />} />
       <Route path="/register-page" element={<RegisterPage />} />
@@ -45,8 +47,10 @@ root.render(
       <Route path="/components" element={<Index />} />
       <Route path="/home-page" element={<HomePage />} />
       <Route path="/profile-page" element={<ProfilePage />} />
+      <Route path="/upload" element={<UploadPage />} />
       
       <Route path="*" element={<Navigate to="/register-page" replace />} />
     </Routes>
+    </AuthProvider>
   </BrowserRouter>
 );

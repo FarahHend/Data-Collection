@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,5 +80,10 @@ public class QuestionService {
 
     public void deleteQuestionById(Integer questionId) {
         questionRepository.deleteById(questionId);
+    }
+
+    public String getQuestionTextById(Integer questionId) {
+        Optional<Question> questionOptional = questionRepository.findById(questionId);
+        return questionOptional.map(Question::getQuestionText).orElse("N/A");
     }
 }
