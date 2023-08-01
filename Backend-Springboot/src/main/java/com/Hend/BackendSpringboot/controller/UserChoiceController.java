@@ -91,7 +91,7 @@ public class UserChoiceController {
     }
 
     @GetMapping("/export_user_choices")
-    public ResponseEntity<ByteArrayResource> exportUserChoicesToCSV() {
+    public ResponseEntity<byte[]> exportUserChoicesToCSV() {
         List<UserChoiceDTO> userChoiceDTOs = userChoiceService.getAllUserChoiceDTOs();
 
         // Convert user choices to CSV format
@@ -114,7 +114,6 @@ public class UserChoiceController {
                 Optional<User> userOptional = userRepository.findById(userChoiceDTO.getUserId());
                 String userName = userOptional.map(User::getUsername).orElse("N/A");
 
-
                 data.add(new String[]{surveyTitle, questionText, optionText, userName});
             }
 
@@ -125,11 +124,14 @@ public class UserChoiceController {
         }
 
         // Prepare response as a downloadable file
-        ByteArrayResource resource = new ByteArrayResource(writer.toString().getBytes());
+        byte[] csvBytes = writer.toString().getBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM); // Set content type as octet stream
+        headers.setContentDispositionFormData("attachment", "user_choices.csv"); // Set the file name
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_choices.csv")
-                .contentType(MediaType.parseMediaType("text/csv"))
-                .body(resource);
+                .headers(headers)
+                .body(csvBytes);
     }
 
 

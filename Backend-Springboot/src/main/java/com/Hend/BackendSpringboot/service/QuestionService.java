@@ -23,6 +23,9 @@ public class QuestionService {
         this.questionRepository = questionRepository;
         this.surveyService = surveyService;
     }
+    public Question saveQuestion(Question question) {
+        return questionRepository.save(question);
+    }
 
     public Question addNewQuestion(String questionText, QuestionType questionType, Integer surveyId) {
         // Retrieve the survey by ID using the service or repository
@@ -63,6 +66,13 @@ public class QuestionService {
 
     public List<QuestionDTO> getQuestionDTOsByQuestionId(Integer questionId) {
         List<Question> questions = questionRepository.findAllBySurvey_IdSurvey(questionId);
+        return questions.stream()
+                .map(this::mapToQuestionDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<QuestionDTO> getQuestionsBySurveyId(Integer surveyId) {
+        List<Question> questions = questionRepository.findAllBySurvey_IdSurvey(surveyId);
         return questions.stream()
                 .map(this::mapToQuestionDTO)
                 .collect(Collectors.toList());

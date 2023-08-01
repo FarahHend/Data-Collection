@@ -53,9 +53,8 @@ public class AuthenticationController {
         String username = authentication.getName();
 
         // Return a custom message including the username
-        String message = "User " + username + " logged out successfully!";
+        String message = " logged out successfully!";
         return ResponseEntity.ok(message);
     }
 }
-
 

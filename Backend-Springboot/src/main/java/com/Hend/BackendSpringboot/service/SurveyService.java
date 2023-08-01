@@ -1,6 +1,7 @@
 package com.Hend.BackendSpringboot.service;
 
 import com.Hend.BackendSpringboot.DTOs.SurveyDTO;
+import com.Hend.BackendSpringboot.model.Option;
 import com.Hend.BackendSpringboot.model.Survey;
 import com.Hend.BackendSpringboot.model.User;
 import com.Hend.BackendSpringboot.repository.SurveyRepository;
@@ -28,6 +29,10 @@ public class SurveyService {
         this.surveyRepository = surveyRepository;
     }
 
+
+    public Survey saveSurvey(Survey survey) {
+        return surveyRepository.save(survey);
+    }
 
         public Survey addSurvey(Integer userId, Survey survey) {
             User user = userRepository.findById(userId)
@@ -74,8 +79,13 @@ public class SurveyService {
 
 
     public Survey getSurveyById(Integer surveyId) {
-        // Use the survey repository to retrieve the survey by its ID
+
         return surveyRepository.findById(surveyId).orElse(null);
+    }
+
+    public SurveyDTO getSurveyByIdDTO(Integer surveyId) {
+        Survey survey = surveyRepository.findById(surveyId).orElse(null);
+        return convertToDTO(survey);
     }
 
     public String getSurveyTitleById(Integer surveyId) {

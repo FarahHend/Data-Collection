@@ -2,6 +2,7 @@ package com.Hend.BackendSpringboot.controller;
 
 import com.Hend.BackendSpringboot.DTOs.FileDTO;
 import com.Hend.BackendSpringboot.DTOs.SurveyDTO;
+import com.Hend.BackendSpringboot.model.Option;
 import com.Hend.BackendSpringboot.model.Survey;
 import com.Hend.BackendSpringboot.service.SurveyService;
 import io.swagger.models.auth.In;
@@ -21,14 +22,18 @@ public class SurveyController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<Survey> addSurvey(@RequestParam("userId") Integer userId, @RequestBody Survey survey) {
-        try {
-            Survey newSurvey = surveyService.addSurvey(userId, survey);
-            return ResponseEntity.ok(newSurvey);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<Survey> addSurvey(@RequestBody Survey survey) {
+        Survey savedSurvey = surveyService.saveSurvey(survey);
+        return ResponseEntity.ok(savedSurvey);
     }
+    //public ResponseEntity<Survey> addSurvey(@RequestParam("userId") Integer userId, @RequestBody Survey survey) {
+        //try {
+           // Survey newSurvey = surveyService.addSurvey(userId, survey);
+            //return ResponseEntity.ok(newSurvey);
+        //} catch (RuntimeException e) {
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        //}
+    //}
 
     //@GetMapping("/byUserId/{userId}")
     //public ResponseEntity<List<Survey>> getSurveysByUserId(@PathVariable Integer userId) {
@@ -40,6 +45,15 @@ public class SurveyController {
     public ResponseEntity<List<SurveyDTO>> getSurveysByUserId(@PathVariable Integer userId) {
         List<SurveyDTO> surveys = surveyService.getSurveysByUserId(userId);
         return ResponseEntity.ok(surveys);
+    }
+
+    @GetMapping("/survey/{surveyId}")
+    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable Integer surveyId) {
+        SurveyDTO survey = surveyService.getSurveyByIdDTO(surveyId);
+        if (survey == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(survey);
     }
 
     @GetMapping("/surveys")

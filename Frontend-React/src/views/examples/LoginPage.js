@@ -68,22 +68,21 @@ export default function LoginPage() {
     try {
       // Call the register function from the apiService
       const response = await login(loginData);
-      console.log("Login successful. Access Token:", response.access_token); // Add this console log
-      //console.log("Login successful:", response);
-      // Handle the successful registration (e.g., show a success message or redirect)
+      console.log("Login successful:", response);
 
-      handlelogin(response.access_token);
-      //setAuthToken(response.access_token);
-
-      //console.log("Login successful:", response);
-
-      // Show a success alert
+      const userId = response.user_id;
+      console.log("User ID:", userId);
+      localStorage.setItem('userId', userId);
+  
+      // Handle the successful login
+      handlelogin(response.access_token); 
+  
+      console.log("Login successful:", response);
+      
       window.alert("Login with success!");
-   
-
     } catch (error) {
-      console.error("Registration failed:", error.message);
-      // Handle the registration error (e.g., show an error message)
+      console.error("Login failed:", error.message);
+      
     }
   };
 

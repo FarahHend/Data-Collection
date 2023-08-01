@@ -20,6 +20,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../api/AuthContext';
 import { getUserIdFromToken } from '../../api/AuthUtils'; 
+import { toast } from 'react-toastify';
 
 // reactstrap components
 import {
@@ -79,31 +80,57 @@ export default function IndexNavbar() {
       .scrollIntoView({ behavior: "smooth" });
   };
 
-  const { authToken } = useContext(AuthContext); 
+  const { authToken, setAuthToken } = useContext(AuthContext); 
 
   const handleFileUpload = async (e) => {
     console.log("Auth Token in handleFileUpload:", authToken); // Add this line to check the value
+  
+    const userId = localStorage.getItem('userId'); // Retrieve the userId from localStorage
+  
+    if (!userId) {
+      console.error("User ID not found in localStorage.");
+      return;
+    }
+  
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('userId', getUserIdFromToken(authToken)); // Extract user ID from the access token
-
+    formData.append('userId', userId); // Append the userId to the formData
+  
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/v1/file-controller/upload',
+        'http://localhost:8080/api/v1/auth/upload',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${authToken}`, // Include the authToken in the request headers
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
       console.log('File uploaded:', response.data);
-      // Handle the successful file upload (e.g., show a success message)
     } catch (error) {
       console.error('File upload failed:', error.message);
-      // Handle the file upload error (e.g., show an error message)
+    }
+  };
+  
+
+  const handleLogout = async () => {
+    try {
+      // Make a POST request to the logout endpoint
+      const response = await axios.post('/api/v1/auth/logout');
+      console.log(response.data); // This will print the message from the server
+
+      // Show a success message to the user (e.g., using a toast notification)
+      toast.success('Logout successful!'); // Assuming you're using the toast library
+
+      // Clear the auth token and remove it from localStorage
+      setAuthToken(null);
+      localStorage.removeItem('token');
+    } catch (error) {
+      console.error('Logout failed:', error.message);
+      // Handle the logout error (e.g., show an error message)
+      // Example: toast.error('Logout failed: ' + error.message);
     }
   };
 
@@ -144,9 +171,16 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-cloud-upload-94" /> Upload
               </Button>
             </NavItem>
-            <NavItem>
-              {/* ... (existing code) */}
-            </NavItem>
+  <NavItem>
+    {/* Add the logout button */}
+    <Button
+      className="nav-link d-none d-lg-block"
+      color="default"
+      onClick={handleLogout}
+    >
+      Logout
+    </Button>
+  </NavItem>
           </Nav>
         </Collapse>
       </Container>

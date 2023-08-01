@@ -29,21 +29,9 @@ public class QuestionController {
     }
 
     @PostMapping("/addquestion")
-    public ResponseEntity<Question> addNewQuestion(
-            @RequestParam String questionText,
-            @RequestParam QuestionType questionType,
-            @RequestParam Integer surveyId) {
-
-        // Retrieve the survey by ID using the service or repository
-        Survey survey = surveyService.getSurveyById(surveyId); // Or surveyRepository.findById(surveyId);
-
-        if (survey == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Question newQuestion = questionService.addNewQuestion(questionText, questionType, surveyId);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(newQuestion);
+    public ResponseEntity<Question> addSQuestion(@RequestBody Question question) {
+        Question savedQuestion = questionService.saveQuestion(question);
+        return ResponseEntity.ok(savedQuestion);
     }
 
     //@GetMapping(value = "/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,6 +54,12 @@ public class QuestionController {
         }
 
         return ResponseEntity.ok(questionDTOList);
+    }
+
+    @GetMapping("/getsurvey/{surveyId}")
+    public ResponseEntity<List<QuestionDTO>> getQuestionsBySurveyId(@PathVariable Integer surveyId) {
+        List<QuestionDTO> questions = questionService.getQuestionsBySurveyId(surveyId);
+        return ResponseEntity.ok(questions);
     }
 
 

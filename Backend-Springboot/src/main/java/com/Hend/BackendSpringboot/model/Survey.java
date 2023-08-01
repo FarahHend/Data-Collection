@@ -43,9 +43,6 @@ public class Survey {
         return UserId();
     }
 
-
-    // Getters and setters
-    // Constructors, if required
 }
 
 

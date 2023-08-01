@@ -33,6 +33,9 @@ import HomePage from "views/examples/HomePage.js";
 import { login, refreshToken, register } from 'api/Authentication.js';
 import { AuthProvider } from './api/AuthContext';
 import UploadPage from 'components/Navbars/IndexNavbar.js';
+import SurveyPage from 'views/examples/Survey.js';
+import SurveyList from 'views/examples/SurveyList.js';
+import SurveyDetailsPage from 'views/examples/SurveyDetailsPage.js'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -48,7 +51,10 @@ root.render(
       <Route path="/home-page" element={<HomePage />} />
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/upload" element={<UploadPage />} />
-      
+      <Route path="/Survey" element={<SurveyPage />} />
+      <Route exact path="/SurveyList" element={<SurveyList />} />
+      <Route path="/survey/:surveyId" element={<SurveyDetailsPage />} />
+    
       <Route path="*" element={<Navigate to="/register-page" replace />} />
     </Routes>
     </AuthProvider>

@@ -5,10 +5,14 @@
 import jwtDecode from 'jwt-decode';
 
 export const getUserIdFromToken = (token) => {
-    console.log("Token in getUserIdFromToken:", token);
-    const decodedToken = jwtDecode(token);
-    return decodedToken.sub;
-  };
+  console.log("Token in getUserIdFromToken:", token);
+  const decodedToken = jwtDecode(token);
+  console.log("Decoded Token:", decodedToken);
+  const userId = decodedToken.sub;
+  console.log("User ID extracted from token:", userId);
+  return userId;
+};
+
   
 
 //export const getUserIdFromToken = (token) => {

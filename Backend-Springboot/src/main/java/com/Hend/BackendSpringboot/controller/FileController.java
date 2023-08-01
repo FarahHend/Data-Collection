@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/v1/file-controller")
+@RequestMapping("/api/v1/auth")
 public class FileController {
 
     private FileService fileService;
