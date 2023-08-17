@@ -1,9 +1,14 @@
 package com.Hend.BackendSpringboot.controller;
 
 import com.Hend.BackendSpringboot.DTOs.FileDTO;
+import com.Hend.BackendSpringboot.DTOs.QuestionDTO;
 import com.Hend.BackendSpringboot.DTOs.SurveyDTO;
+import com.Hend.BackendSpringboot.DTOs.OptionDTO;
 import com.Hend.BackendSpringboot.model.Option;
+import com.Hend.BackendSpringboot.model.Question;
 import com.Hend.BackendSpringboot.model.Survey;
+import com.Hend.BackendSpringboot.service.OptionService;
+import com.Hend.BackendSpringboot.service.QuestionService;
 import com.Hend.BackendSpringboot.service.SurveyService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +18,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class SurveyController {
     @Autowired
     private SurveyService surveyService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private OptionService optionService;
 
 
     @PostMapping("/add")
@@ -56,6 +68,26 @@ public class SurveyController {
         return ResponseEntity.ok(survey);
     }
 
+
+    @GetMapping("/get_surveys/{surveyId}")
+    public ResponseEntity<SurveyDTO> getSurveyDetails(@PathVariable Integer surveyId) {
+        Survey survey = surveyService.getSurveyById(surveyId);
+        if (survey == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<QuestionDTO> questionDTOs = questionService.getQuestionsBySurveyId(surveyId);
+        SurveyDTO surveyDetailsDTO = new SurveyDTO();
+        surveyDetailsDTO.setId(survey.getId());
+        surveyDetailsDTO.setTitleSurvey(survey.getTitleSurvey());
+        surveyDetailsDTO.setDescriptionSurvey(survey.getDescriptionSurvey());
+        surveyDetailsDTO.setQuestions(questionDTOs);
+
+        return ResponseEntity.ok(surveyDetailsDTO);
+    }
+
+
+
     @GetMapping("/surveys")
     public ResponseEntity<List<SurveyDTO>> getAllSurveys() {
 
@@ -63,7 +95,19 @@ public class SurveyController {
         return new ResponseEntity<>(fileDTOs, HttpStatus.OK);
     }
 
-    @DeleteMapping("/surveys/{id}")
+    @GetMapping("/surveys/{surveyId}/participants")
+    public ResponseEntity<Integer> getParticipantsCountForSurvey(@PathVariable Integer surveyId) {
+        int participantsCount = surveyService.getParticipantsCountForSurvey(surveyId);
+        return ResponseEntity.ok(participantsCount);
+    }
+
+    @GetMapping("/{surveyId}/option_user_counts")
+    public ResponseEntity<List<OptionDTO>> getOptionUserCounts(@PathVariable Integer surveyId) {
+        List<OptionDTO> optionUserCounts = surveyService.getOptionUserCountsBySurvey(surveyId);
+        return ResponseEntity.ok(optionUserCounts);
+    }
+
+    @DeleteMapping("/delete/survey/{id}")
     public ResponseEntity<String> deleteSurvey(@PathVariable Integer id) {
         try {
             surveyService.deleteSurveyById(id);
@@ -74,6 +118,4 @@ public class SurveyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting survey.");
         }
     }
-
-
 }

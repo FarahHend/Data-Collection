@@ -4,9 +4,11 @@ public class UserChoiceDTO {
         private Integer userId;
         private Integer questionId;
         private Integer optionId;
+        private Integer surveyId;
         private String surveyTitle;
         private String questionText;
         private String optionText;
+        private String firstname;
 
 
         // Constructors, getters, and setters
@@ -14,8 +16,9 @@ public class UserChoiceDTO {
     public UserChoiceDTO() {
     }
 
-    public UserChoiceDTO(Integer userId, Integer questionId, Integer optionId) {
+    public UserChoiceDTO(Integer userId, Integer surveyId, Integer questionId, Integer optionId) {
         this.userId = userId;
+        this.surveyId = surveyId;
         this.questionId = questionId;
         this.optionId = optionId;
     }
@@ -27,6 +30,14 @@ public class UserChoiceDTO {
 
     public Integer getQuestionId() {
         return questionId;
+    }
+
+    public String getUserName() {
+        return firstname;
+    }
+
+    public void setUserName(String firstname) {
+        this.firstname = firstname;
     }
 
     public Integer getOptionId() {
@@ -68,6 +79,15 @@ public class UserChoiceDTO {
 
     public void setOptionId(Integer optionId) {
         this.optionId = optionId;
+    }
+
+
+    public Integer getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(Integer idSurvey) {
+        this.surveyId = idSurvey;
     }
 }
 

@@ -1,15 +1,18 @@
 package com.Hend.BackendSpringboot.service;
 
+import com.Hend.BackendSpringboot.DTOs.OptionDTO;
 import com.Hend.BackendSpringboot.DTOs.SurveyDTO;
 import com.Hend.BackendSpringboot.model.Option;
 import com.Hend.BackendSpringboot.model.Survey;
 import com.Hend.BackendSpringboot.model.User;
 import com.Hend.BackendSpringboot.repository.SurveyRepository;
+import com.Hend.BackendSpringboot.repository.UserChoiceRepository;
 import com.Hend.BackendSpringboot.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,9 @@ public class SurveyService {
 
     @Autowired
     private static SurveyRepository surveyRepository;
+
+    @Autowired
+    private static UserChoiceRepository userChoiceRepository;
 
     @Autowired
     public SurveyService(SurveyRepository surveyRepository) {
@@ -39,6 +45,7 @@ public class SurveyService {
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
             survey.setUser(user);
+            survey.setCreatedAt(LocalDateTime.now());
             return surveyRepository.save(survey);
         }
 
@@ -64,6 +71,7 @@ public class SurveyService {
             surveyDTO.setId(survey.getIdSurvey());
             surveyDTO.setTitleSurvey(survey.getTitleSurvey());
             surveyDTO.setDescriptionSurvey(survey.getDescriptionSurvey());
+            surveyDTO.setCreatedAt(survey.getCreatedAt());
            // surveyDTO.setUserId(survey.UserId());
             surveyDTOs.add(surveyDTO);
         }
@@ -91,6 +99,25 @@ public class SurveyService {
     public String getSurveyTitleById(Integer surveyId) {
         Optional<Survey> surveyOptional = surveyRepository.findById(surveyId);
         return surveyOptional.map(Survey::getTitleSurvey).orElse("N/A");
+    }
+
+    public List<OptionDTO> getOptionUserCountsBySurvey(Integer surveyId) {
+        List<Object[]> counts = userChoiceRepository.findOptionUserCountsBySurvey(surveyId);
+
+        return counts.stream()
+                .map(count -> {
+                    OptionDTO optionDTO = new OptionDTO();
+                    optionDTO.setIdOption((Integer) count[0]);
+                    optionDTO.setOptionText((String) count[1]);
+                    optionDTO.setQuestionId((Integer) count[2]);
+                    return optionDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    public int getParticipantsCountForSurvey(Integer surveyId) {
+        return surveyRepository.countParticipantsBySurveyId(surveyId);
     }
 }
 

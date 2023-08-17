@@ -7,9 +7,12 @@ import com.Hend.BackendSpringboot.service.*;
 import com.opencsv.CSVWriter;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
+import java.util.stream.Collectors;
+
 
 
 import java.io.IOException;
@@ -39,102 +42,89 @@ public class UserChoiceController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/userchoice")
-    public ResponseEntity<String> addUserChoice(
-            @RequestParam Integer userId,
-            @RequestParam Integer questionId,
-            @RequestParam Integer optionId
-    ) {
-        // Retrieve the User, Question, and Option entities based on their IDs
-        User user = userService.getUserById(userId);
-        Question question = questionService.getQuestionById(questionId);
-        Option option = optionService.getOptionById(optionId);
 
-        // Add the UserChoice
-        userChoiceService.addUserChoice(user, question, option);
+    @PostMapping("/adduserchoice/userchoice")
+    public ResponseEntity<String> addChoice(@RequestBody UserChoiceDTO userChoiceDTO) {
+        Integer userId = userChoiceDTO.getUserId();
+        Integer surveyId = userChoiceDTO.getSurveyId();
+        Integer questionId = userChoiceDTO.getQuestionId();
+        Integer optionId = userChoiceDTO.getOptionId();
+        String optionText = userChoiceDTO.getOptionText();
+
+        if (optionId != null) {
+            userChoiceService.addUserChoice(userId, surveyId, questionId, optionId);
+        } else if (optionText != null) {
+            userChoiceService.addUserChoiceWithText(userId, surveyId, questionId, optionText);
+        } else {
+            return ResponseEntity.badRequest().body("Invalid user choice data.");
+        }
 
         return ResponseEntity.ok("UserChoice added successfully.");
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<UserChoiceDTO>> getAllUserChoices() {
-        List<UserChoiceDTO> userChoiceDTOs = userChoiceService.getAllUserChoiceDTOs();
+
+    @GetMapping("/surveys/{surveyId}/user_choices")
+    public ResponseEntity<List<UserChoiceDTO>> getUserChoicesBySurveyId(@PathVariable Integer surveyId) {
+        List<UserChoice> userChoices = userChoiceService.getUserChoicesBySurveyId(surveyId);
+        List<UserChoiceDTO> userChoiceDTOs = userChoices.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(userChoiceDTOs);
     }
 
-    // Helper method to convert UserChoiceDTO to UserChoice entity
-    private UserChoice convertToEntity(UserChoiceDTO userChoiceDTO) {
-        // Implement the conversion logic from UserChoiceDTO to UserChoice entity
-        // You can use ModelMapper or manually map the properties
 
-        // Example:
-        UserChoice userChoice = new UserChoice();
-        UserChoiceId userChoiceId = new UserChoiceId();
-        userChoiceId.setUserId(userChoiceDTO.getUserId());
-        userChoiceId.setQuestionId(userChoiceDTO.getQuestionId());
-        userChoiceId.setOptionId(userChoiceDTO.getOptionId());
-        userChoice.setId(userChoiceId);
-        return userChoice;
-    }
-
-    // Helper method to convert UserChoice entity to UserChoiceDTO
     private UserChoiceDTO convertToDTO(UserChoice userChoice) {
-        // Implement the conversion logic from UserChoice entity to UserChoiceDTO
-        // You can use ModelMapper or manually map the properties
-
-        // Example:
         UserChoiceDTO userChoiceDTO = new UserChoiceDTO();
-        userChoiceDTO.setUserId(userChoice.getId().getUserId());
-        userChoiceDTO.setQuestionId(userChoice.getId().getQuestionId());
-        userChoiceDTO.setOptionId(userChoice.getId().getOptionId());
+
+        userChoiceDTO.setUserId(userChoice.getId().getUser().getId());
+        userChoiceDTO.setSurveyId(userChoice.getId().getSurvey().getIdSurvey());
+        userChoiceDTO.setQuestionId(userChoice.getId().getQuestion().getIdQuestion());
+        userChoiceDTO.setOptionId(userChoice.getId().getOption().getIdOption());
+
+        String surveyTitle = surveyService.getSurveyTitleById(userChoice.getId().getSurvey().getIdSurvey());
+        String questionText = questionService.getQuestionTextById(userChoice.getId().getQuestion().getIdQuestion());
+        String optionText = optionService.getOptionTextById(userChoice.getId().getOption().getIdOption());
+
+        Optional<User> userOptional = userRepository.findById(userChoice.getId().getUser().getId());
+        String userName = userOptional.map(User::getFirstname).orElse("N/A");
+
+        userChoiceDTO.setSurveyTitle(surveyTitle);
+        userChoiceDTO.setQuestionText(questionText);
+        userChoiceDTO.setOptionText(optionText);
+        userChoiceDTO.setUserName(userName);
+
         return userChoiceDTO;
     }
 
-    @GetMapping("/export_user_choices")
-    public ResponseEntity<byte[]> exportUserChoicesToCSV() {
-        List<UserChoiceDTO> userChoiceDTOs = userChoiceService.getAllUserChoiceDTOs();
 
-        // Convert user choices to CSV format
+
+    @GetMapping("/surveys/{surveyId}/user_choices/export_csv")
+    public ResponseEntity<byte[]> exportUserChoicesToCSV(@PathVariable Integer surveyId) {
+        List<UserChoice> userChoiceDTOs = userChoiceService.getUserChoicesBySurveyId(surveyId);
+
         StringWriter writer = new StringWriter();
         try (CSVWriter csvWriter = new CSVWriter(writer)) {
             List<String[]> data = new ArrayList<>();
-            data.add(new String[]{"Survey Title", "Question", "Option", "User"});
+            data.add(new String[]{"Name", "Survey Title", "Question", "Answer"});
 
-            for (UserChoiceDTO userChoiceDTO : userChoiceDTOs) {
-                // Fetch additional details like survey title, question text, option text, and user name
-                String surveyTitle = surveyService.getSurveyTitleById(userChoiceDTO.getQuestionId());
-                String questionText = questionService.getQuestionTextById(userChoiceDTO.getQuestionId());
-                String optionText = optionService.getOptionTextById(userChoiceDTO.getOptionId());
-
-                // Set the survey title, question text, and option text in the UserChoiceDTO
-                userChoiceDTO.setSurveyTitle(surveyTitle);
-                userChoiceDTO.setQuestionText(questionText);
-                userChoiceDTO.setOptionText(optionText);
-
-                Optional<User> userOptional = userRepository.findById(userChoiceDTO.getUserId());
-                String userName = userOptional.map(User::getUsername).orElse("N/A");
-
-                data.add(new String[]{surveyTitle, questionText, optionText, userName});
+            for (UserChoice userChoice : userChoiceDTOs) {
+                data.add(new String[]{userChoice.getUserName(), userChoice.getSurveyTitle(), userChoice.getQuestionText(), userChoice.getOptionText()});
             }
 
             csvWriter.writeAll(data);
         } catch (IOException e) {
-            // Handle exception if needed
             e.printStackTrace();
         }
 
-        // Prepare response as a downloadable file
         byte[] csvBytes = writer.toString().getBytes();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM); // Set content type as octet stream
-        headers.setContentDispositionFormData("attachment", "user_choices.csv"); // Set the file name
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "user_choices.csv");
 
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(csvBytes);
     }
-
-
 
 }
 

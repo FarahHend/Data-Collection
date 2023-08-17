@@ -35,7 +35,23 @@ public class Option {
     @OneToMany(mappedBy = "id.option")
     private List<UserChoice> UserChoices;
 
-    // Getters and setters
-    // Constructors, if required
+    @OneToMany(mappedBy = "idChoice.option")
+    private List<PollChoice> pollChoices;
+
+    public Option(Integer optionId) {
+    }
+
+    public void setIdOption(Integer idOption) {
+        this.idOption = idOption;
+    }
+
+    public String getOptionText() {
+        return optionText;
+    }
+
+    public void setOptionText(String optionText) {
+        this.optionText = optionText;
+    }
+
 }
 

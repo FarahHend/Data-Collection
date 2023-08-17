@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* BLK Design System React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState , useContext } from 'react';
 import classnames from "classnames";
 import { AuthContext } from '../../api/AuthContext';
@@ -33,6 +15,7 @@ import {
   Input,
   InputGroupAddon,
   InputGroupText,
+  UncontrolledAlert,
   InputGroup,
   Container,
   Row,
@@ -40,17 +23,15 @@ import {
 } from "reactstrap";
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
-// Import the register function from the apiService
-// Update the import statement
 import { login, refreshToken, register } from 'api/Authentication.js';
-
-
-// Rest of the code...
+import { useNavigate } from 'react-router-dom';
 export default function LoginPage() {
   const [squares1to6, setSquares1to6] = useState("");
   const [squares7and8, setSquares7and8] = useState("");
   const [emailFocus, setEmailFocus] = useState(false);
-  const [passwordFocus, setPasswordFocus] = useState(false); // Add this line
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const navigate = useNavigate();
   
   const { handlelogin } = useContext(AuthContext);
   const { setAuthToken } = useContext(AuthContext);
@@ -66,20 +47,19 @@ export default function LoginPage() {
     };
 
     try {
-      // Call the register function from the apiService
       const response = await login(loginData);
-      console.log("Login successful:", response);
+      //console.log("Login successful:", response);
 
       const userId = response.user_id;
-      console.log("User ID:", userId);
+      //console.log("User ID:", userId);
       localStorage.setItem('userId', userId);
-  
-      // Handle the successful login
+
       handlelogin(response.access_token); 
   
-      console.log("Login successful:", response);
-      
-      window.alert("Login with success!");
+      //console.log("Login successful:", response);
+      setRegistrationSuccess(true);
+      //window.alert("Login with success!");
+      navigate(`/home-page`);
     } catch (error) {
       console.error("Login failed:", error.message);
       
@@ -126,6 +106,16 @@ export default function LoginPage() {
           <div className="page-header-image" />
           <div className="content">
             <Container>
+            {registrationSuccess && (
+                        <UncontrolledAlert className="alert-with-icon" color="success"
+                        style={{ width: '400px', height: '80px',marginLeft: '900px'}}>
+                          <span data-notify="icon" className="tim-icons icon-bell-55" />
+                          <span>
+                            <b>Well done! -</b>
+                            Login with success!
+                          </span>
+                        </UncontrolledAlert>
+                      )}
               <Row>
                 <Col className="offset-lg-0 offset-md-3" lg="5" md="6">
                   <div
@@ -142,13 +132,15 @@ export default function LoginPage() {
                     <CardHeader>
                       <CardImg
                         alt="..."
-                        src={require("assets/img/square-purple-1.png")}
+                        src={require("assets/img/pastel-toile-de-fond-abstraite-pour-technologie-banniere-vectoriel.jpg")}
+                        height="330"
+                        width="300"
                       />
                       <CardTitle
-                        style={{ textAlign: "right", marginRight: "4.3cm" }}
+                        style={{ textAlign: "right", marginRight: "5cm", color: "#38226E" }}
                         tag="h4"
                       >
-                        Sign Up
+                        Sign In
                       </CardTitle>
                     </CardHeader>
                     <CardBody>
@@ -195,7 +187,7 @@ export default function LoginPage() {
                         
                          
                         <div className="text-center">
-                          <Button className="btn-round" color="primary" size="lg" type="submit">
+                          <Button className="btn-round" color="warning" size="lg" type="submit">
                             Get Started
                           </Button>
                         </div>
@@ -241,4 +233,4 @@ export default function LoginPage() {
       </div>
     </>
   );
-                        }
+}

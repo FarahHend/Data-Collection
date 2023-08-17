@@ -16,6 +16,10 @@ public class UserChoiceId implements Serializable {
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "id_survey")
+    private Survey survey;
+
+    @ManyToOne
     @JoinColumn(name = "id_question")
     private Question question;
 
@@ -34,6 +38,14 @@ public class UserChoiceId implements Serializable {
 
     public void setOption(Option option) {
         this.option = option;
+    }
+
+    public Survey getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 
     public Option getOption() {
@@ -68,11 +80,5 @@ public class UserChoiceId implements Serializable {
 
     public void setOptionId(Integer optionId) {
     }
-
-
-    // Getters and setters (if needed)
-
-    // Make sure to override hashCode() and equals() methods
-    // to ensure correct equality checks for the composite key
 }
 

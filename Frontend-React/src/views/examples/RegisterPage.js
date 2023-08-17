@@ -1,22 +1,8 @@
-/*!
 
-=========================================================
-* BLK Design System React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React, { useState } from "react";
 import classnames from "classnames";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button,
   Card,
@@ -31,6 +17,7 @@ import {
   Input,
   InputGroupAddon,
   InputGroupText,
+  UncontrolledAlert,
   InputGroup,
   Container,
   Row,
@@ -38,44 +25,38 @@ import {
 } from "reactstrap";
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
-// Import the register function from the apiService
-// Update the import statement
 import { login, refreshToken, register } from 'api/Authentication.js';
 
-// Rest of the code...
 export default function RegisterPage() {
   const [squares1to6, setSquares1to6] = useState("");
   const [squares7and8, setSquares7and8] = useState("");
   const [fullNameFocus, setFullNameFocus] = useState(false);
+  const [fullNameFocus1, setFullNameFocus1] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
-  const [roleFocus, setRoleFocus] = useState(false); // Added state for the role input
+  const [roleFocus, setRoleFocus] = useState(false); 
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     const form = e.target;
     const registerData = {
-      // Get the form data to pass to the register function
       firstname: form["firstname"].value,
       lastname: form["lastname"].value,
       email: form["email"].value,
       password: form["password"].value,
-      role: "USER", // Set the default role to "USER"
+      role: "USER",
     };
 
     try {
-      // Call the register function from the apiService
       const response = await register(registerData);
-      console.log("Registration successful:", response);
-      // Handle the successful registration (e.g., show a success message or redirect)
-
-      console.log("Registration successful:", response);
-
-      // Show a success alert
-      window.alert("Account created successfully!");
+      //console.log("Registration successful:", response);
+      //setRegistrationSuccess(true);
+      toast.success("Account created successfully!", { autoClose: 3000 });
+     // window.alert("Account created successfully!");
     } catch (error) {
       console.error("Registration failed:", error.message);
-      // Handle the registration error (e.g., show an error message)
+
     }
   };
 
@@ -119,29 +100,28 @@ export default function RegisterPage() {
           <div className="page-header-image" />
           <div className="content">
             <Container>
+            
               <Row>
                 <Col className="offset-lg-0 offset-md-3" lg="5" md="6">
                   <div
-                    className="square square-7"
-                    id="square7"
-                    style={{ transform: squares7and8 }}
+                    
                   />
                   <div
-                    className="square square-8"
-                    id="square8"
-                    style={{ transform: squares7and8 }}
+                
                   />
                   <Card className="card-register">
                     <CardHeader>
                       <CardImg
                         alt="..."
-                        src={require("assets/img/square-purple-1.png")}
+                        src={require("assets/img/pastel-toile-de-fond-abstraite-pour-technologie-banniere-vectoriel.jpg")}
+                        height="330"
+                        width="300"
                       />
                       <CardTitle
-                        style={{ textAlign: "right", marginRight: "4.3cm" }}
-                        tag="h4"
-                      >
-                        Sign Up
+                       style={{ textAlign: "right", marginRight: "4.3cm", color: "#38226E" }}
+                       tag="h6"
+                             >
+                             Sign Up
                       </CardTitle>
                     </CardHeader>
                     <CardBody>
@@ -166,7 +146,7 @@ export default function RegisterPage() {
                         </InputGroup>
                         <InputGroup
                           className={classnames({
-                            "input-group-focus": fullNameFocus,
+                            "input-group-focus": fullNameFocus1,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -177,8 +157,8 @@ export default function RegisterPage() {
                           <Input
                             placeholder="Last Name"
                             type="text"
-                            onFocus={(e) => setFullNameFocus(true)}
-                            onBlur={(e) => setFullNameFocus(false)}
+                            onFocus={(e) => setFullNameFocus1(true)}
+                            onBlur={(e) => setFullNameFocus1(false)}
                             name="lastname"
                           />
                         </InputGroup>
@@ -218,23 +198,12 @@ export default function RegisterPage() {
                             name="password"
                           />
                         </InputGroup>
-                        
-                        
-                        <FormGroup check className="text-left">
-                          <Label check>
-                            <Input type="checkbox" />
-                            <span className="form-check-sign" />
-                            I agree to the{" "}
-                            <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                              terms and conditions
-                            </a>
-                            .
-                          </Label>
-                        </FormGroup>
                         <div className="text-center">
-                          <Button className="btn-round" color="primary" size="lg" type="submit">
+                        <Col lg="12" >
+                          <Button className="btn-round" color="warning" size="lg" type="submit">
                             Register
                           </Button>
+                          </Col>
                         </div>
                       </form>
                     </CardBody>
@@ -245,7 +214,7 @@ export default function RegisterPage() {
               <div
                 className="square square-1"
                 id="square1"
-                style={{ transform: squares1to6 }}
+                
               />
               <div
                 className="square square-2"
@@ -276,6 +245,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

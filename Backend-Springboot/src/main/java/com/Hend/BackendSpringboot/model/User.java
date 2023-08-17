@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
-import java.util.List;
-
-@Data
+import java.util.List;@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,20 +46,31 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "id.user")
     private List<UserChoice> userChoices;
 
+    @OneToMany(mappedBy = "idChoice.user")
+    private List<PollChoice> pollChoices;
+
     @OneToMany(mappedBy = "user")
     private List<Survey> surveys;
+
+    @OneToMany(mappedBy = "user")
+    private List<Question> userQuestions;
+
+    public User(Integer userId) {
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-
-
-
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public String getFirstname() {
+        return firstname;
     }
 
     @Override
@@ -92,3 +102,5 @@ public class User implements UserDetails {
         return id_user;
     }
 }
+
+

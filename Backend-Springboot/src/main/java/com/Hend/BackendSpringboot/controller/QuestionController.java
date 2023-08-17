@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -56,14 +57,38 @@ public class QuestionController {
         return ResponseEntity.ok(questionDTOList);
     }
 
+    @GetMapping("/questionByUser/{userId}")
+    public List<QuestionDTO> getQuestionsByUserId(@PathVariable Integer userId) {
+        return questionService.getQuestionsByUserId(userId);
+    }
+
+
     @GetMapping("/getsurvey/{surveyId}")
     public ResponseEntity<List<QuestionDTO>> getQuestionsBySurveyId(@PathVariable Integer surveyId) {
         List<QuestionDTO> questions = questionService.getQuestionsBySurveyId(surveyId);
         return ResponseEntity.ok(questions);
     }
+    @GetMapping("/questionsWithNullSurvey")
+    public List<QuestionDTO> getQuestionsWithNullSurvey() {
+        List<Question> questions = questionService.getQuestionsWithNullSurvey();
+        List<QuestionDTO> questionDTOs = new ArrayList<>();
 
+        for (Question question : questions) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            questionDTO.setIdQuestion(question.getIdQuestion());
+            questionDTO.setQuestionText(question.getQuestionText());
 
-    @DeleteMapping("/{questionId}")
+            if (question.getQuestionType() != null) {
+                questionDTO.setQuestionType(question.getQuestionType().name());
+            } else {
+                questionDTO.setQuestionType(null);
+            }
+            questionDTOs.add(questionDTO);
+        }
+
+        return questionDTOs;
+    }
+    @DeleteMapping("/deletequestion/{questionId}")
     public ResponseEntity<String> deleteQuestionById(@PathVariable Integer questionId) {
         questionService.deleteQuestionById(questionId);
         return ResponseEntity.ok("Question with ID: " + questionId + " deleted successfully.");

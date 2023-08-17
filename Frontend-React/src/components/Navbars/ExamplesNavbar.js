@@ -47,7 +47,7 @@ export default function ExamplesNavbar() {
       document.documentElement.scrollTop > 99 ||
       document.body.scrollTop > 99
     ) {
-      setColor("bg-info");
+      setColor("bg-default");
     } else if (
       document.documentElement.scrollTop < 100 ||
       document.body.scrollTop < 100
@@ -70,9 +70,15 @@ export default function ExamplesNavbar() {
       <Container>
         <div className="navbar-translate">
           <NavbarBrand to="/" id="navbar-brand" tag={Link}>
-            Data
-            <span>Hub • </span>
-            
+          <Col className="collapse-brand" xs="6">
+  <a >
+  <img
+        src={require("assets/img/Capture_d_écran_2023-08-07_025100-removebg-preview.png")}
+        width="500"
+
+      />
+  </a>
+</Col>
           </NavbarBrand>
           <UncontrolledTooltip placement="bottom" target="navbar-brand">
           Where Data Finds Meaning!
@@ -98,7 +104,6 @@ export default function ExamplesNavbar() {
             <Row>
               <Col className="collapse-brand" xs="6">
                 <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  DataHub 
                 </a>
               </Col>
               <Col className="collapse-close text-right" xs="6">
@@ -153,6 +158,11 @@ export default function ExamplesNavbar() {
             <NavItem>
               <NavLink tag={Link} to="/login-page">
                 Sign In 
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={Link} to="/register-page">
+                Sign Up 
               </NavLink>
             </NavItem>
           </Nav>

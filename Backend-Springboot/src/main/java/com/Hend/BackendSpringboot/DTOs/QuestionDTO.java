@@ -1,4 +1,5 @@
 package com.Hend.BackendSpringboot.DTOs;
+import java.util.List;
 
 import com.Hend.BackendSpringboot.model.QuestionType;
 
@@ -6,9 +7,7 @@ public class QuestionDTO {
     private Integer idQuestion;
     private String questionText;
     private String questionType;
-
-    // Add public getters and setters for the properties
-    // You can use your IDE to generate them automatically or write them manually.
+    private List<OptionDTO> options;
 
     // Example for idQuestion:
     public Integer getIdQuestion() {
@@ -37,6 +36,7 @@ public class QuestionDTO {
         this.questionType = questionType;
     }
 
-    // Add getters and setters for other properties if needed.
+    public void setOptions(List<OptionDTO> optionDTOs) {
+    }
 }
 

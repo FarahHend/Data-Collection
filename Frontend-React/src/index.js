@@ -1,23 +1,7 @@
-/*!
-
-=========================================================
-* BLK Design System React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+
 
 import "assets/css/nucleo-icons.css";
 import "assets/scss/blk-design-system-react.scss";
@@ -36,6 +20,16 @@ import UploadPage from 'components/Navbars/IndexNavbar.js';
 import SurveyPage from 'views/examples/Survey.js';
 import SurveyList from 'views/examples/SurveyList.js';
 import SurveyDetailsPage from 'views/examples/SurveyDetailsPage.js'
+import SurveysList from 'views/examples/SurveysList.js';
+import SurveyDetails from 'views/examples/SurveyDetails.js'
+import UserChoicePage from 'views/examples/UserChoicePage.js'
+import DatasetsPage from 'views/examples/DatasetsPage.js'
+import YourSurveysPage from 'views/examples/YourSurveysPage.js'
+import YourDatasetsPage from 'views/examples/YourDatasetsPage.js'
+import StatisticPage from 'views/examples/StatisticPage.js'
+import OptionForm  from 'views/examples/OptionPage.js';
+import YourPollPage from 'views/examples/YourPollPage.js'
+import PollChoice from 'views/examples/PollChoice.js'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -52,8 +46,18 @@ root.render(
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/upload" element={<UploadPage />} />
       <Route path="/Survey" element={<SurveyPage />} />
-      <Route exact path="/SurveyList" element={<SurveyList />} />
+      <Route path="/SurveyList" element={<SurveyList />} />
       <Route path="/survey/:surveyId" element={<SurveyDetailsPage />} />
+      <Route path="/surveys" element={<SurveysList />} />
+      <Route path="/surveys/:surveyId" element={<SurveyDetails />} />
+      <Route path="/UserChoice/:surveyId" element={<UserChoicePage />} />
+      <Route path="/Datasets" element={<DatasetsPage />} />
+      <Route path="/survey-page" element={<YourSurveysPage />} />
+      <Route path="/dataset-page" element={<YourDatasetsPage />} />
+      <Route path="/Statistic-page/:surveyId" element={<StatisticPage />} />
+      <Route path="/Option/:questionId" element={<OptionForm />} />
+      <Route path="/Poll-page" element={<YourPollPage />} />
+      <Route path="/PollChoice/:questionId" element={<PollChoice />} />
     
       <Route path="*" element={<Navigate to="/register-page" replace />} />
     </Routes>

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -62,6 +63,20 @@ public class FileService {
         //return fileRepository.findAll();
     //}
 
+    public List<FileDTO> getFilesByUserId(Integer userId) {
+        List<File> files = fileRepository.findByUserId(userId);
+        return files.stream().map(this::convertToFileDTO).collect(Collectors.toList());
+    }
+
+    private FileDTO convertToFileDTO(File file) {
+        FileDTO fileDTO = new FileDTO();
+        fileDTO.setId(file.getId());
+        fileDTO.setName(file.getFileName());
+        fileDTO.setType(file.getFileType());
+        fileDTO.setSize(file.getFileSize());
+        return fileDTO;
+    }
+
     public List<FileDTO> getAllFiles() {
         List<File> files = fileRepository.findAll();
         List<FileDTO> fileDTOs = new ArrayList<>();
@@ -75,6 +90,12 @@ public class FileService {
         }
         return fileDTOs;
     }
+    public List<FileDTO> getFilesByFile_nameContainingIgnoreCase(String fileName) {
+        List<File> files = fileRepository.findByFile_nameContainingIgnoreCase(fileName);
+        return files.stream().map(this::convertToFileDTO).collect(Collectors.toList());
+    }
+
+
 
     public void deleteFileById(String fileId) {
         fileRepository.deleteById(fileId);

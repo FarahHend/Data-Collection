@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Integer> {
     List<Option> findAllByIdOption(Integer idOption);
+    List<Option> findAllByQuestion_IdQuestion(Integer questionId);
 }
 

@@ -31,7 +31,7 @@
 
     .squares{
       animation: move-left-right 1s infinite;
-      @include linear-gradient($primary-states, $primary);
+      @include linear-gradient($warning-states, $warning);
       position: absolute;
       transition: 0.5s ease-out;
       overflow: hidden;
@@ -473,6 +473,7 @@
 
     .square{
       position: absolute;
+      background: linear-gradient(to bottom, $transparent-bg 0%, $card-black-background 100%);
       transition: 0.5s ease-out;
       border-radius: 2px;
       background-size: 100%;

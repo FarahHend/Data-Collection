@@ -77,13 +77,25 @@ public class FileController {
        // return new ResponseEntity<>(files, HttpStatus.OK);
    // }
 
+    @GetMapping("/files/user/{userId}")
+    public ResponseEntity<List<FileDTO>> getFilesByUserId(@PathVariable Integer userId) {
+        List<FileDTO> fileDTOs = fileService.getFilesByUserId(userId);
+        return new ResponseEntity<>(fileDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/files/search")
+    public ResponseEntity<List<FileDTO>> getFilesByFile_nameContainingIgnoreCase(@RequestParam String fileName) {
+        List<FileDTO> fileDTOs = fileService.getFilesByFile_nameContainingIgnoreCase(fileName);
+        return new ResponseEntity<>(fileDTOs, HttpStatus.OK);
+    }
+
     @GetMapping("/files")
     public ResponseEntity<List<FileDTO>> getAllFiles() {
         List<FileDTO> fileDTOs = fileService.getAllFiles();
         return new ResponseEntity<>(fileDTOs, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{fileId}")
+    @DeleteMapping("/delete_file/{fileId}")
     public ResponseEntity<String> deleteFile(@PathVariable String fileId) {
         try {
             fileService.deleteFileById(fileId);

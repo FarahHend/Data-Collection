@@ -5,9 +5,8 @@ public class OptionDTO {
     private String optionText;
     private Integer questionId;
 
-    // Add public getters and setters for the properties
 
-    // Example for idOption:
+
     public Integer getIdOption() {
         return idOption;
     }
@@ -33,6 +32,4 @@ public class OptionDTO {
     public void setQuestionId(Integer questionId) {
         this.questionId = questionId;
     }
-
-    // Add getters and setters for other properties if needed.
 }

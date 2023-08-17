@@ -13,5 +13,8 @@ public interface SurveyRepository extends JpaRepository<Survey, Integer> {
     @Query("SELECT s FROM Survey s WHERE s.user.id_user = :userId")
     List<Survey> findByUser_IdUser(Integer userId);
 
+    @Query("SELECT COUNT(DISTINCT uc.id.user) FROM UserChoice uc WHERE uc.id.survey.idSurvey = :surveyId")
+    int countParticipantsBySurveyId(Integer surveyId);
+
 }
 

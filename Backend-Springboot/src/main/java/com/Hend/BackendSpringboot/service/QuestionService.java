@@ -1,5 +1,6 @@
 package com.Hend.BackendSpringboot.service;
 
+import com.Hend.BackendSpringboot.DTOs.OptionDTO;
 import com.Hend.BackendSpringboot.DTOs.QuestionDTO;
 import com.Hend.BackendSpringboot.model.Question;
 import com.Hend.BackendSpringboot.model.QuestionType;
@@ -49,19 +50,19 @@ public class QuestionService {
     }
 
     //public QuestionDTO getQuestionDTOById(Integer questionId) {
-        //Question question = questionRepository.findById(questionId).orElse(null);
+    //Question question = questionRepository.findById(questionId).orElse(null);
 
-        //if (question == null) {
-            //return null;
-        //}
+    //if (question == null) {
+    //return null;
+    //}
 
-        //QuestionDTO questionDTO = new QuestionDTO();
-        //questionDTO.setIdQuestion(question.getIdQuestion());
-        //questionDTO.setQuestionText(question.getQuestionText());
-        //questionDTO.setQuestionType(question.getQuestionType());
-        // Set other fields from the Question entity if needed
+    //QuestionDTO questionDTO = new QuestionDTO();
+    //questionDTO.setIdQuestion(question.getIdQuestion());
+    //questionDTO.setQuestionText(question.getQuestionText());
+    //questionDTO.setQuestionType(question.getQuestionType());
+    // Set other fields from the Question entity if needed
 
-        //return questionDTO;
+    //return questionDTO;
     //}
 
     public List<QuestionDTO> getQuestionDTOsByQuestionId(Integer questionId) {
@@ -76,6 +77,31 @@ public class QuestionService {
         return questions.stream()
                 .map(this::mapToQuestionDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<QuestionDTO> getQuestionsByUserId(Integer userId) {
+        List<Question> questions = questionRepository.findByUser_IdUser(userId);
+        return questions.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private QuestionDTO convertToDTO(Question question) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setIdQuestion(question.getIdQuestion());
+        questionDTO.setQuestionText(question.getQuestionText());
+        questionDTO.setQuestionType(question.getQuestionType().name());
+
+        return questionDTO;
+    }
+
+    public List<Question> getQuestionsWithNullSurvey() {
+        return questionRepository.findBySurveyIsNull();
+    }
+
+    public List<Question> getQuestionBySurveyId(Integer surveyId) {
+        List<Question> questions = questionRepository.findAllBySurvey_IdSurvey(surveyId);
+        return questions;
     }
 
     private QuestionDTO mapToQuestionDTO(Question question) {

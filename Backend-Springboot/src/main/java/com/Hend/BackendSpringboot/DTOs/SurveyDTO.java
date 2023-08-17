@@ -1,11 +1,18 @@
 package com.Hend.BackendSpringboot.DTOs;
 
+import com.Hend.BackendSpringboot.model.Question;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class SurveyDTO {
 
     private Integer id;
     private String titleSurvey;
     private String descriptionSurvey;
-    //private Integer userId;
+    private LocalDateTime createdAt;
+
+    private List<QuestionDTO> questions;
 
     public SurveyDTO(Integer id, String titleSurvey, String descriptionSurvey) {
         this.id = id;
@@ -19,7 +26,20 @@ public class SurveyDTO {
 
     }
 
+    public SurveyDTO(Integer idSurvey, String titleSurvey, String descriptionSurvey, List<Question> questions, LocalDateTime createdAt) {
 
+    }
+
+    public SurveyDTO(Integer idSurvey, String titleSurvey, String descriptionSurvey, LocalDateTime createdAt) {
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
     public Integer getId() {
         return id;
     }
@@ -41,6 +61,9 @@ public class SurveyDTO {
 
     public void setDescriptionSurvey(String descriptionSurvey) {
         this.descriptionSurvey = descriptionSurvey;
+    }
+
+    public void setQuestions(List<QuestionDTO> questionDTOs) {
     }
 
     //public Integer getUserId() {

@@ -35,8 +35,15 @@ export default function Footer() {
       <Container>
         <Row>
           <Col md="3">
-            <h1 className="title">DataHub •</h1>
-          </Col>
+         
+  <a >
+  <img
+        src={require("assets/img/Capture_d_écran_2023-08-07_025100-removebg-preview.png")}
+       
+
+      />
+  </a>
+</Col>
           <Col md="3">
             <Nav>
               <NavItem>

@@ -26,6 +26,18 @@ public class OptionService {
         //return optionRepository.findById(optionId).orElse(null);
     //}
 
+    public List<OptionDTO> getOptionsByQuestionId(Integer questionId) {
+        List<Option> options = optionRepository.findAllByQuestion_IdQuestion(questionId);
+        return options.stream()
+                .map(this::convertToOptionDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<Option> getOptionByQuestionId(Integer questionId) {
+        List<Option> options = optionRepository.findAllByQuestion_IdQuestion(questionId);
+        return options;
+    }
+
     public List<OptionDTO> getOptionDTOsByOptionId(Integer optionId) {
         List<Option> options = optionRepository.findAllByIdOption(optionId);
         return options.stream()
@@ -49,6 +61,10 @@ public class OptionService {
     public String getOptionTextById(Integer optionId) {
         Optional<Option> optionOptional = optionRepository.findById(optionId);
         return optionOptional.map(Option::getOptionText).orElse("N/A");
+    }
+
+    public void deleteOption(Option option) {
+        optionRepository.delete(option);
     }
 }
 

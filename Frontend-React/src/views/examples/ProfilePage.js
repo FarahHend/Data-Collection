@@ -1,25 +1,7 @@
-/*!
-
-=========================================================
-* BLK Design System React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import classnames from "classnames";
-// javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-// reactstrap components
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -36,9 +18,8 @@ import {
   UncontrolledCarousel,
 } from "reactstrap";
 
-// core components
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
+import Navbar from "components/Navbars/Navbar.js";
 
 const carouselItems = [
   {
@@ -62,6 +43,7 @@ let ps = null;
 
 export default function ProfilePage() {
   const [tabs, setTabs] = React.useState(1);
+  const navigate = useNavigate();
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
@@ -72,7 +54,6 @@ export default function ProfilePage() {
       }
     }
     document.body.classList.toggle("profile-page");
-    // Specify how to clean up after this effect:
     return function cleanup() {
       //if (navigator.platform.indexOf("Win") > -1) {
         //ps.destroy();
@@ -84,7 +65,7 @@ export default function ProfilePage() {
   }, []);
   return (
     <>
-      <IndexNavbar />
+    <Navbar />
       <div className="wrapper">
         <div className="page-header">
           <img
@@ -100,7 +81,7 @@ export default function ProfilePage() {
           <Container className="align-items-center">
             <Row>
               <Col lg="6" md="6">
-                <h1 className="profile-title text-left">Home</h1>
+                <h1 className="profile-title text-left">Datasets</h1>
                 <h5 className="text-on-back">01</h5>
                 <p className="profile-description">
                   Offices parties lasting outward nothing age few resolve.
@@ -108,6 +89,17 @@ export default function ProfilePage() {
                   excellence. Him remarkably use projection collecting. Going
                   about eat forty world has round miles.
                 </p>
+                <div className="btn-wrapper pt-3">
+                
+                  <Button
+                    className="btn-simple"
+                    color="info"
+                    href="#pablo"
+                    onClick={() => navigate('/dataset-page')}
+                  >
+                    <i className="tim-icons icon-bulb-63" /> Check it!
+                  </Button>
+                </div>
                 </Col>
               <Col className="ml-auto mr-auto" lg="4" md="6">
                 <Card className="card-coin card-plain">
@@ -122,7 +114,6 @@ export default function ProfilePage() {
                   <CardBody>
                   <CardText className="text-center">
         This is the description of the user.
-        {/* Add your desired description here */}
       </CardText>
                   </CardBody>
                 </Card>
@@ -139,7 +130,7 @@ export default function ProfilePage() {
                 </Row>
               </Col>
               <Col md="5">
-                <h1 className="profile-title text-left">Datasets</h1>
+                <h1 className="profile-title text-left">Responses</h1>
                 <h5 className="text-on-back">02</h5>
                 <p className="profile-description text-left">
                   An artist of considerable range, Ryan — the name taken by
@@ -154,7 +145,7 @@ export default function ProfilePage() {
                     className="btn-simple"
                     color="info"
                     href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={() => navigate('/survey-page')}
                   >
                     <i className="tim-icons icon-bulb-63" /> Check it!
                   </Button>

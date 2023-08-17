@@ -34,14 +34,20 @@ public class UserChoice {
         this.id = id;
     }
 
-    // Getters and setters for individual fields of the embedded id
-
     public User getUser() {
         return id.getUser();
     }
 
     public void setUser(User user) {
         this.id.setUser(user);
+    }
+
+    public Survey getSurvey() {
+        return id.getSurvey();
+    }
+
+    public void setSurvey(Survey survey) {
+        this.id.setSurvey(survey);
     }
 
     public Question getQuestion() {
@@ -56,11 +62,32 @@ public class UserChoice {
         return id.getOption();
     }
 
+    public String getUserName() {
+        return id.getUser().getFirstname();
+    }
 
+    public String getSurveyTitle() {
+        return id.getSurvey().getTitleSurvey();
+    }
 
+    public String getQuestionText() {
+        return id.getQuestion().getQuestionText();
+    }
 
+    public String getOptionText() {
+        return id.getOption().getOptionText();
+    }
 
-    // Getters and setters (if needed)
+    public void setIdOption(Integer optionId) {
+        
+    }
 
-    // Constructors, if required
+    public void setIdQuestion(Integer questionId) {
+    }
+
+    public void setIdSurvey(Integer surveyId) {
+    }
+
+    public void setIdUser(Integer userId) {
+    }
 }
