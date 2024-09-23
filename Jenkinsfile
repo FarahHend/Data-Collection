@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('GIT') {
             steps {
-                git branch: 'master', url: 'https://github.com/FarahHend/Data-Collection.git'
+                git branch: 'main', url: 'https://github.com/FarahHend/Data-Collection.git'
             }
         }
         stage('Compile Stage') {
