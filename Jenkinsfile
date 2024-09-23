@@ -13,8 +13,8 @@ pipeline {
         }
         stage('Set Permissions') {
             steps {
-                sh 'sudo chmod -R 755 ./Data-Collection'
-                sh 'sudo chown -R jenkins:jenkins ./Data-Collection'
+                sh 'chmod -R 755 ./Data-Collection'
+                sh 'chown -R jenkins:jenkins ./Data-Collection'
             }
         }
         stage('Compile Stage') {
