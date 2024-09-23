@@ -7,6 +7,7 @@ pipeline {
     stages {
         stage('GIT') {
             steps {
+                cleanWs()
                 git branch: 'main', url: 'https://github.com/FarahHend/Data-Collection.git'
             }
         }
