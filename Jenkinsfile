@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Compile Stage') {
             steps {
-                dir('Backend-Springboot') {
+                dir('/Data-Collection/Backend-Springboot') {
                     sh 'mvn clean compile'
                 }
             }
