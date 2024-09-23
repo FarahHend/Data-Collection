@@ -11,11 +11,18 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/FarahHend/Data-Collection.git'
             }
         }
+        stage('Set Permissions') {
+            steps {
+                // Set the appropriate permissions for the directory
+                sh 'sudo chmod -R 755 ./Data-Collection'
+                sh 'sudo chown -R jenkins:jenkins ./Data-Collection'
+            }
+        }
         stage('Compile Stage') {
             steps {
                 dir('/Data-Collection/Backend-Springboot') {
                     sh 'ls -la'
-                    sh 'mvn -f pom.xml clean compile'
+                    sh 'mvn clean compile'
                 }
             }
         }
