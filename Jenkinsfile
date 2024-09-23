@@ -13,7 +13,6 @@ pipeline {
         }
         stage('Set Permissions') {
             steps {
-                // Set the appropriate permissions for the directory
                 sh 'sudo chmod -R 755 ./Data-Collection'
                 sh 'sudo chown -R jenkins:jenkins ./Data-Collection'
             }
